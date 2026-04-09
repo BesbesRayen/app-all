@@ -29,6 +29,8 @@ public class User {
     private String password;
 
     private String phone;
+    private String address;
+    private String profession;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

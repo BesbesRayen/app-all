@@ -15,9 +15,6 @@ public class KycDocumentDto {
     private String selfieUrl;
     private String cinNumber;
     private String ocrResult;
-    private String sumsubApplicantId;
-    private String sumsubReviewStatus;
-    private String sumsubReviewAnswer;
     private KycStatus status;
     private String adminComment;
     private LocalDateTime createdAt;

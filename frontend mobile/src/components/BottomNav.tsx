@@ -1,12 +1,13 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AppRoute, useAppNavigation } from "@/lib/app-navigation";
 
 const tabs = [
-  { route: "Home" as AppRoute, icon: "⌂", label: "Accueil" },
-  { route: "Shops" as AppRoute, icon: "◫", label: "Boutiques" },
-  { route: "Credit" as AppRoute, icon: "¤", label: "Credit" },
-  { route: "Installments" as AppRoute, icon: "◷", label: "Echeances" },
-  { route: "Profile" as AppRoute, icon: "☺", label: "Profil" },
+  { route: "Home" as AppRoute, icon: "home-outline", label: "Accueil" },
+  { route: "Shops" as AppRoute, icon: "storefront-outline", label: "Boutiques" },
+  { route: "Credit" as AppRoute, icon: "credit-card-outline", label: "Credit" },
+  { route: "Support" as AppRoute, icon: "headset", label: "Support" },
+  { route: "Profile" as AppRoute, icon: "account-outline", label: "Profil" },
 ];
 
 const BottomNav = () => {
@@ -25,7 +26,7 @@ const BottomNav = () => {
               style={styles.tabButton}
             >
               <View style={[styles.iconBox, isActive && styles.iconBoxActive]}>
-                <Text style={[styles.icon, isActive && styles.iconActive]}>{tab.icon}</Text>
+                <MaterialCommunityIcons name={tab.icon as never} size={18} style={[styles.icon, isActive && styles.iconActive]} />
               </View>
               <Text style={[styles.label, isActive && styles.labelActive]}>
                 {tab.label}
@@ -73,9 +74,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#2563eb",
   },
   icon: {
-    fontSize: 16,
     color: "#6b7280",
-    fontWeight: "700",
   },
   iconActive: {
     color: "#ffffff",

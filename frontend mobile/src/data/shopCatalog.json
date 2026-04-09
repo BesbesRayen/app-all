@@ -1,0 +1,462 @@
+{
+  "shops": [
+    {
+      "id": 1,
+      "name": "Zara",
+      "logoUrl": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900",
+      "storeUrl": "https://www.zara.com"
+    },
+    {
+      "id": 2,
+      "name": "Bershka",
+      "logoUrl": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=900",
+      "storeUrl": "https://www.bershka.com"
+    },
+    {
+      "id": 3,
+      "name": "H&M",
+      "logoUrl": "https://images.unsplash.com/photo-1445205170230-053b83016050?w=900",
+      "storeUrl": "https://www2.hm.com"
+    },
+    {
+      "id": 4,
+      "name": "Decathlon",
+      "logoUrl": "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=900",
+      "storeUrl": "https://www.decathlon.tn"
+    },
+    {
+      "id": 5,
+      "name": "Mega PC",
+      "logoUrl": "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=900",
+      "storeUrl": "https://www.mega-pc.tn"
+    }
+  ],
+  "articles": [
+    { "id": 1101, "shopId": 1, "name": "Zara Oversized Blazer", "imageUrl": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900" },
+    { "id": 1102, "shopId": 1, "name": "Zara Minimal Sneakers", "imageUrl": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900" },
+    { "id": 1103, "shopId": 1, "name": "Zara Urban Denim", "imageUrl": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=900" },
+
+    { "id": 1201, "shopId": 2, "name": "Bershka Street Hoodie", "imageUrl": "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=900" },
+    { "id": 1202, "shopId": 2, "name": "Bershka Cargo Line", "imageUrl": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=900" },
+    { "id": 1203, "shopId": 2, "name": "Bershka Daily Tees", "imageUrl": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900" },
+
+    { "id": 1301, "shopId": 3, "name": "H&M Office Shirts", "imageUrl": "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=900" },
+    { "id": 1302, "shopId": 3, "name": "H&M Casual Trousers", "imageUrl": "https://images.unsplash.com/photo-1551232864-3f0890e580d9?w=900" },
+    { "id": 1303, "shopId": 3, "name": "H&M Soft Knit", "imageUrl": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=900" },
+
+    { "id": 1401, "shopId": 4, "name": "Decathlon Running Gear", "imageUrl": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=900" },
+    { "id": 1402, "shopId": 4, "name": "Decathlon Backpacks", "imageUrl": "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=900" },
+    { "id": 1403, "shopId": 4, "name": "Decathlon Smart Devices", "imageUrl": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900" },
+
+    { "id": 1501, "shopId": 5, "name": "Mega PC Gaming Mice", "imageUrl": "https://images.unsplash.com/photo-1586349906319-48d20e9d17db?w=900" },
+    { "id": 1502, "shopId": 5, "name": "Mega PC Keyboards", "imageUrl": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=900" },
+    { "id": 1503, "shopId": 5, "name": "Mega PC Monitors", "imageUrl": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=900" }
+  ],
+  "products": [
+    {
+      "id": 101,
+      "shopId": 1,
+      "articleId": 1101,
+      "name": "Zara Oversized Blazer",
+      "imageUrl": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900",
+      "priceTnd": 259,
+      "productUrl": "https://www.zara.com"
+    },
+    {
+      "id": 102,
+      "shopId": 1,
+      "articleId": 1101,
+      "name": "Zara Structured Trousers",
+      "imageUrl": "https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=900",
+      "priceTnd": 169,
+      "productUrl": "https://www.zara.com"
+    },
+    {
+      "id": 103,
+      "shopId": 1,
+      "articleId": 1101,
+      "name": "Zara Leather Belt",
+      "imageUrl": "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=900",
+      "priceTnd": 79,
+      "productUrl": "https://www.zara.com"
+    },
+    {
+      "id": 104,
+      "shopId": 2,
+      "articleId": 1102,
+      "name": "Zara Minimal Sneakers",
+      "imageUrl": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=900",
+      "priceTnd": 149,
+      "productUrl": "https://www.zara.com"
+    },
+    {
+      "id": 105,
+      "shopId": 1,
+      "articleId": 1102,
+      "name": "Zara Urban Socks Pack",
+      "imageUrl": "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?w=900",
+      "priceTnd": 39,
+      "productUrl": "https://www.zara.com"
+    },
+    {
+      "id": 106,
+      "shopId": 1,
+      "articleId": 1102,
+      "name": "Zara Sports Cap",
+      "imageUrl": "https://images.unsplash.com/photo-1521369909029-2afed882baee?w=900",
+      "priceTnd": 59,
+      "productUrl": "https://www.zara.com"
+    },
+    {
+      "id": 107,
+      "shopId": 1,
+      "articleId": 1103,
+      "name": "Zara Urban Denim",
+      "imageUrl": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=900",
+      "priceTnd": 179,
+      "productUrl": "https://www.zara.com"
+    },
+    {
+      "id": 108,
+      "shopId": 1,
+      "articleId": 1103,
+      "name": "Zara Denim Shirt",
+      "imageUrl": "https://images.unsplash.com/photo-1506629905607-d4054a4c0f19?w=900",
+      "priceTnd": 129,
+      "productUrl": "https://www.zara.com"
+    },
+    {
+      "id": 109,
+      "shopId": 1,
+      "articleId": 1103,
+      "name": "Zara Crossbody Bag",
+      "imageUrl": "https://images.unsplash.com/photo-1591561954557-26941169b49e?w=900",
+      "priceTnd": 119,
+      "productUrl": "https://www.zara.com"
+    },
+    {
+      "id": 201,
+      "shopId": 2,
+      "articleId": 1201,
+      "name": "Bershka Knit Hoodie",
+      "imageUrl": "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=900",
+      "priceTnd": 129,
+      "productUrl": "https://www.bershka.com"
+    },
+    {
+      "id": 202,
+      "shopId": 2,
+      "articleId": 1201,
+      "name": "Bershka Straight Jeans",
+      "imageUrl": "https://images.unsplash.com/photo-1511196044526-5cb3bcb7071b?w=900",
+      "priceTnd": 149,
+      "productUrl": "https://www.bershka.com"
+    },
+    {
+      "id": 203,
+      "shopId": 2,
+      "articleId": 1201,
+      "name": "Bershka Sneakers",
+      "imageUrl": "https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=900",
+      "priceTnd": 159,
+      "productUrl": "https://www.bershka.com"
+    },
+    {
+      "id": 204,
+      "shopId": 2,
+      "articleId": 1202,
+      "name": "Bershka Cargo Pants",
+      "imageUrl": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=900",
+      "priceTnd": 139,
+      "productUrl": "https://www.bershka.com"
+    },
+    {
+      "id": 205,
+      "shopId": 2,
+      "articleId": 1202,
+      "name": "Bershka Utility Jacket",
+      "imageUrl": "https://images.unsplash.com/photo-1483181957632-8bda974cbc91?w=900",
+      "priceTnd": 189,
+      "productUrl": "https://www.bershka.com"
+    },
+    {
+      "id": 206,
+      "shopId": 2,
+      "articleId": 1202,
+      "name": "Bershka Cap",
+      "imageUrl": "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=900",
+      "priceTnd": 49,
+      "productUrl": "https://www.bershka.com"
+    },
+    {
+      "id": 207,
+      "shopId": 2,
+      "articleId": 1203,
+      "name": "Bershka Street Tee",
+      "imageUrl": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900",
+      "priceTnd": 89,
+      "productUrl": "https://www.bershka.com"
+    },
+    {
+      "id": 208,
+      "shopId": 2,
+      "articleId": 1203,
+      "name": "Bershka Printed Tee",
+      "imageUrl": "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=900",
+      "priceTnd": 79,
+      "productUrl": "https://www.bershka.com"
+    },
+    {
+      "id": 209,
+      "shopId": 2,
+      "articleId": 1203,
+      "name": "Bershka Relaxed Shorts",
+      "imageUrl": "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=900",
+      "priceTnd": 99,
+      "productUrl": "https://www.bershka.com"
+    },
+    {
+      "id": 301,
+      "shopId": 3,
+      "articleId": 1301,
+      "name": "H&M Cotton Shirt",
+      "imageUrl": "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=900",
+      "priceTnd": 119,
+      "productUrl": "https://www2.hm.com"
+    },
+    {
+      "id": 302,
+      "shopId": 3,
+      "articleId": 1301,
+      "name": "H&M Formal Blazer",
+      "imageUrl": "https://images.unsplash.com/photo-1593032465171-8bdcf5f0b40d?w=900",
+      "priceTnd": 229,
+      "productUrl": "https://www2.hm.com"
+    },
+    {
+      "id": 303,
+      "shopId": 3,
+      "articleId": 1301,
+      "name": "H&M Office Loafers",
+      "imageUrl": "https://images.unsplash.com/photo-1614252369475-531eba835eb1?w=900",
+      "priceTnd": 149,
+      "productUrl": "https://www2.hm.com"
+    },
+    {
+      "id": 304,
+      "shopId": 3,
+      "articleId": 1302,
+      "name": "H&M Relaxed Trousers",
+      "imageUrl": "https://images.unsplash.com/photo-1551232864-3f0890e580d9?w=900",
+      "priceTnd": 149,
+      "productUrl": "https://www2.hm.com"
+    },
+    {
+      "id": 305,
+      "shopId": 3,
+      "articleId": 1302,
+      "name": "H&M Basic Tee",
+      "imageUrl": "https://images.unsplash.com/photo-1527719327859-c6ce80353573?w=900",
+      "priceTnd": 69,
+      "productUrl": "https://www2.hm.com"
+    },
+    {
+      "id": 306,
+      "shopId": 3,
+      "articleId": 1302,
+      "name": "H&M Leather Belt",
+      "imageUrl": "https://images.unsplash.com/photo-1613227784102-2f976c1f6db2?w=900",
+      "priceTnd": 55,
+      "productUrl": "https://www2.hm.com"
+    },
+    {
+      "id": 307,
+      "shopId": 3,
+      "articleId": 1303,
+      "name": "H&M Knit Sweater",
+      "imageUrl": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=900",
+      "priceTnd": 109,
+      "productUrl": "https://www2.hm.com"
+    },
+    {
+      "id": 308,
+      "shopId": 3,
+      "articleId": 1303,
+      "name": "H&M Soft Cardigan",
+      "imageUrl": "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=900",
+      "priceTnd": 119,
+      "productUrl": "https://www2.hm.com"
+    },
+    {
+      "id": 309,
+      "shopId": 3,
+      "articleId": 1303,
+      "name": "H&M Winter Scarf",
+      "imageUrl": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900",
+      "priceTnd": 59,
+      "productUrl": "https://www2.hm.com"
+    },
+    {
+      "id": 401,
+      "shopId": 4,
+      "articleId": 1401,
+      "name": "Decathlon Running Shoes",
+      "imageUrl": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=900",
+      "priceTnd": 199,
+      "productUrl": "https://www.decathlon.tn"
+    },
+    {
+      "id": 402,
+      "shopId": 4,
+      "articleId": 1401,
+      "name": "Decathlon Sport T-Shirt",
+      "imageUrl": "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=900",
+      "priceTnd": 89,
+      "productUrl": "https://www.decathlon.tn"
+    },
+    {
+      "id": 403,
+      "shopId": 4,
+      "articleId": 1401,
+      "name": "Decathlon Running Shorts",
+      "imageUrl": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=900",
+      "priceTnd": 79,
+      "productUrl": "https://www.decathlon.tn"
+    },
+    {
+      "id": 404,
+      "shopId": 4,
+      "articleId": 1402,
+      "name": "Decathlon Sport Backpack",
+      "imageUrl": "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?w=900",
+      "priceTnd": 129,
+      "productUrl": "https://www.decathlon.tn"
+    },
+    {
+      "id": 405,
+      "shopId": 4,
+      "articleId": 1402,
+      "name": "Decathlon Hydration Bottle",
+      "imageUrl": "https://images.unsplash.com/photo-1536939459926-301728717817?w=900",
+      "priceTnd": 35,
+      "productUrl": "https://www.decathlon.tn"
+    },
+    {
+      "id": 406,
+      "shopId": 4,
+      "articleId": 1402,
+      "name": "Decathlon Training Cap",
+      "imageUrl": "https://images.unsplash.com/photo-1521369909029-2afed882baee?w=900",
+      "priceTnd": 45,
+      "productUrl": "https://www.decathlon.tn"
+    },
+    {
+      "id": 407,
+      "shopId": 4,
+      "articleId": 1403,
+      "name": "Decathlon Smart Watch",
+      "imageUrl": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900",
+      "priceTnd": 229,
+      "productUrl": "https://www.decathlon.tn"
+    },
+    {
+      "id": 408,
+      "shopId": 4,
+      "articleId": 1403,
+      "name": "Decathlon Wireless Earbuds",
+      "imageUrl": "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=900",
+      "priceTnd": 149,
+      "productUrl": "https://www.decathlon.tn"
+    },
+    {
+      "id": 409,
+      "shopId": 4,
+      "articleId": 1403,
+      "name": "Decathlon Smart Scale",
+      "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=900",
+      "priceTnd": 169,
+      "productUrl": "https://www.decathlon.tn"
+    },
+    {
+      "id": 501,
+      "shopId": 5,
+      "articleId": 1501,
+      "name": "Mega PC Gaming Mouse",
+      "imageUrl": "https://images.unsplash.com/photo-1586349906319-48d20e9d17db?w=900",
+      "priceTnd": 159,
+      "productUrl": "https://www.mega-pc.tn"
+    },
+    {
+      "id": 502,
+      "shopId": 5,
+      "articleId": 1501,
+      "name": "Mega PC Mousepad XL",
+      "imageUrl": "https://images.unsplash.com/photo-1587614382346-4ec70e388b28?w=900",
+      "priceTnd": 79,
+      "productUrl": "https://www.mega-pc.tn"
+    },
+    {
+      "id": 503,
+      "shopId": 5,
+      "articleId": 1501,
+      "name": "Mega PC RGB Headset",
+      "imageUrl": "https://images.unsplash.com/photo-1599669454699-248893623440?w=900",
+      "priceTnd": 249,
+      "productUrl": "https://www.mega-pc.tn"
+    },
+    {
+      "id": 504,
+      "shopId": 5,
+      "articleId": 1502,
+      "name": "Mega PC Mechanical Keyboard",
+      "imageUrl": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=900",
+      "priceTnd": 249,
+      "productUrl": "https://www.mega-pc.tn"
+    },
+    {
+      "id": 505,
+      "shopId": 5,
+      "articleId": 1502,
+      "name": "Mega PC Compact Keyboard",
+      "imageUrl": "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=900",
+      "priceTnd": 219,
+      "productUrl": "https://www.mega-pc.tn"
+    },
+    {
+      "id": 506,
+      "shopId": 5,
+      "articleId": 1502,
+      "name": "Mega PC Gaming Keycaps",
+      "imageUrl": "https://images.unsplash.com/photo-1603484477859-abe6a73f9366?w=900",
+      "priceTnd": 99,
+      "productUrl": "https://www.mega-pc.tn"
+    },
+    {
+      "id": 507,
+      "shopId": 5,
+      "articleId": 1503,
+      "name": "Mega PC 27\" Monitor",
+      "imageUrl": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=900",
+      "priceTnd": 699,
+      "productUrl": "https://www.mega-pc.tn"
+    },
+    {
+      "id": 508,
+      "shopId": 5,
+      "articleId": 1503,
+      "name": "Mega PC 24\" Monitor",
+      "imageUrl": "https://images.unsplash.com/photo-1588508065123-287b28e013da?w=900",
+      "priceTnd": 529,
+      "productUrl": "https://www.mega-pc.tn"
+    },
+    {
+      "id": 509,
+      "shopId": 5,
+      "articleId": 1503,
+      "name": "Mega PC Monitor Arm",
+      "imageUrl": "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=900",
+      "priceTnd": 149,
+      "productUrl": "https://www.mega-pc.tn"
+    }
+  ]
+}

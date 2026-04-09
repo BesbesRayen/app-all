@@ -1,7 +1,6 @@
 package com.creaditn.creaditnbackend.service;
 
 import com.creaditn.creaditnbackend.dto.KycDocumentDto;
-import com.creaditn.creaditnbackend.dto.SumsubInitResponse;
 import com.creaditn.creaditnbackend.entity.*;
 import com.creaditn.creaditnbackend.exception.BadRequestException;
 import com.creaditn.creaditnbackend.exception.ResourceNotFoundException;
@@ -9,8 +8,6 @@ import com.creaditn.creaditnbackend.repository.KycDocumentRepository;
 import com.creaditn.creaditnbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,8 +27,6 @@ public class KycService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
     private final OcrService ocrService;
-    private final SumsubClient sumsubClient;
-    private final ObjectMapper objectMapper;
 
     @Value("${app.upload-dir:uploads}")
     private String uploadDir;
@@ -117,9 +112,8 @@ public class KycService {
 
     public KycDocumentDto uploadMultipart(Long userId, String cinNumber, MultipartFile cinFront, MultipartFile cinBack, MultipartFile selfie)
             throws IOException {
-        if (cinFront == null || cinFront.isEmpty() || cinBack == null || cinBack.isEmpty()
-                || selfie == null || selfie.isEmpty()) {
-            throw new BadRequestException("All three files (CIN front, CIN back, selfie) are required");
+        if (cinFront == null || cinFront.isEmpty() || cinBack == null || cinBack.isEmpty()) {
+            throw new BadRequestException("CIN front and CIN back are required");
         }
         
         // Resolve to absolute path if relative
@@ -135,158 +129,13 @@ public class KycService {
         String selfieName = "selfie.jpg";
         cinFront.transferTo(dir.resolve(frontName).toFile());
         cinBack.transferTo(dir.resolve(backName).toFile());
-        selfie.transferTo(dir.resolve(selfieName).toFile());
+        if (selfie != null && !selfie.isEmpty()) {
+            selfie.transferTo(dir.resolve(selfieName).toFile());
+        }
 
         String base = "/api/files/kyc/" + userId + "/";
-        return submitKycDocuments(userId, cinNumber, base + frontName, base + backName, base + selfieName);
-    }
-
-    public SumsubInitResponse initSumsubKyc(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        if (user.getKycStatus() == KycStatus.APPROVED) {
-            throw new BadRequestException("KYC already approved");
-        }
-
-        KycDocument doc = kycDocumentRepository.findTopByUserIdOrderByCreatedAtDesc(userId)
-                .orElseGet(() -> kycDocumentRepository.save(KycDocument.builder()
-                        .user(user)
-                        .status(KycStatus.PENDING)
-                        .build()));
-
-        if (doc.getSumsubApplicantId() == null || doc.getSumsubApplicantId().isBlank()) {
-            String applicantId = sumsubClient.createApplicant(
-                    String.valueOf(user.getId()),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getEmail(),
-                    user.getPhone()
-            );
-            doc.setSumsubApplicantId(applicantId);
-        }
-
-        doc.setStatus(KycStatus.PENDING);
-        doc.setSumsubReviewStatus("init");
-        kycDocumentRepository.save(doc);
-
-        user.setKycStatus(KycStatus.PENDING);
-        userRepository.save(user);
-
-        String sdkToken = sumsubClient.createSdkToken(String.valueOf(user.getId()));
-
-        return SumsubInitResponse.builder()
-                .userId(user.getId())
-                .kycDocumentId(doc.getId())
-                .applicantId(doc.getSumsubApplicantId())
-                .sdkToken(sdkToken)
-                .ttlInSecs(600L)
-                .build();
-    }
-
-    public KycDocumentDto syncSumsubStatus(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        KycDocument doc = kycDocumentRepository.findTopByUserIdOrderByCreatedAtDesc(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("KYC document not found"));
-
-        if (doc.getSumsubApplicantId() == null || doc.getSumsubApplicantId().isBlank()) {
-            throw new BadRequestException("Sumsub applicant not initialized for this user");
-        }
-
-        KycStatus oldStatus = doc.getStatus();
-        SumsubClient.SumsubReviewStatus sumsubStatus = sumsubClient.getApplicantStatus(doc.getSumsubApplicantId());
-
-        doc.setSumsubReviewStatus(sumsubStatus.getReviewStatus());
-        doc.setSumsubReviewAnswer(sumsubStatus.getReviewAnswer());
-
-        if ("GREEN".equalsIgnoreCase(sumsubStatus.getReviewAnswer())) {
-            doc.setStatus(KycStatus.APPROVED);
-            user.setKycStatus(KycStatus.APPROVED);
-        } else if ("RED".equalsIgnoreCase(sumsubStatus.getReviewAnswer())) {
-            doc.setStatus(KycStatus.REJECTED);
-            user.setKycStatus(KycStatus.REJECTED);
-            doc.setAdminComment(sumsubStatus.getRejectLabels());
-        } else {
-            doc.setStatus(KycStatus.PENDING);
-            user.setKycStatus(KycStatus.PENDING);
-        }
-
-        kycDocumentRepository.save(doc);
-        userRepository.save(user);
-
-        if (oldStatus != doc.getStatus() && doc.getStatus() == KycStatus.APPROVED) {
-            notificationService.sendNotification(user.getId(),
-                    "KYC Approved", "Your identity has been verified successfully.",
-                    NotificationType.KYC_VALIDATED);
-        }
-        if (oldStatus != doc.getStatus() && doc.getStatus() == KycStatus.REJECTED) {
-            notificationService.sendNotification(user.getId(),
-                    "KYC Rejected", "Your identity verification was rejected.",
-                    NotificationType.KYC_VALIDATED);
-        }
-
-        return mapToDto(doc);
-    }
-
-    public void handleSumsubWebhook(String payload, String signatureHeader) {
-        if (!sumsubClient.verifyWebhookSignature(payload, signatureHeader)) {
-            throw new BadRequestException("Invalid Sumsub webhook signature");
-        }
-
-        try {
-            JsonNode root = objectMapper.readTree(payload == null ? "{}" : payload);
-            String applicantId = root.path("applicantId").asText("");
-            if (applicantId.isBlank()) {
-                throw new BadRequestException("Sumsub webhook missing applicantId");
-            }
-
-            KycDocument doc = kycDocumentRepository.findTopBySumsubApplicantIdOrderByCreatedAtDesc(applicantId)
-                    .orElseThrow(() -> new ResourceNotFoundException("KYC document not found for applicantId: " + applicantId));
-
-            User user = doc.getUser();
-            KycStatus previousStatus = doc.getStatus();
-
-            String reviewStatus = root.path("reviewStatus").asText("");
-            String reviewAnswer = root.path("reviewResult").path("reviewAnswer").asText("");
-            if (reviewAnswer.isBlank()) {
-                reviewAnswer = root.path("reviewResult").path("moderationComment").asText("");
-            }
-
-            doc.setSumsubReviewStatus(reviewStatus);
-            doc.setSumsubReviewAnswer(reviewAnswer);
-
-            if ("GREEN".equalsIgnoreCase(reviewAnswer)) {
-                doc.setStatus(KycStatus.APPROVED);
-                user.setKycStatus(KycStatus.APPROVED);
-            } else if ("RED".equalsIgnoreCase(reviewAnswer)) {
-                doc.setStatus(KycStatus.REJECTED);
-                user.setKycStatus(KycStatus.REJECTED);
-                doc.setAdminComment(root.path("reviewResult").path("rejectLabels").toString());
-            } else {
-                doc.setStatus(KycStatus.PENDING);
-                user.setKycStatus(KycStatus.PENDING);
-            }
-
-            kycDocumentRepository.save(doc);
-            userRepository.save(user);
-
-            if (previousStatus != doc.getStatus() && doc.getStatus() == KycStatus.APPROVED) {
-                notificationService.sendNotification(user.getId(),
-                        "KYC Approved", "Your identity has been verified successfully.",
-                        NotificationType.KYC_VALIDATED);
-            }
-            if (previousStatus != doc.getStatus() && doc.getStatus() == KycStatus.REJECTED) {
-                notificationService.sendNotification(user.getId(),
-                        "KYC Rejected", "Your identity verification was rejected.",
-                        NotificationType.KYC_VALIDATED);
-            }
-        } catch (BadRequestException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new BadRequestException("Invalid Sumsub webhook payload: " + ex.getMessage());
-        }
+        String selfieUrl = (selfie != null && !selfie.isEmpty()) ? base + selfieName : null;
+        return submitKycDocuments(userId, cinNumber, base + frontName, base + backName, selfieUrl);
     }
 
     private KycDocumentDto mapToDto(KycDocument doc) {
@@ -298,9 +147,6 @@ public class KycService {
                 .selfieUrl(doc.getSelfieUrl())
                 .cinNumber(doc.getCinNumber())
                 .ocrResult(doc.getOcrResult())
-                .sumsubApplicantId(doc.getSumsubApplicantId())
-                .sumsubReviewStatus(doc.getSumsubReviewStatus())
-                .sumsubReviewAnswer(doc.getSumsubReviewAnswer())
                 .status(doc.getStatus())
                 .adminComment(doc.getAdminComment())
                 .createdAt(doc.getCreatedAt())

@@ -24,7 +24,7 @@ public class UserService {
     }
 
     public UserDto getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailIgnoreCase(email == null ? "" : email.trim())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
         return mapToDto(user);
     }
@@ -48,7 +48,17 @@ public class UserService {
 
         if (dto.getFirstName() != null) user.setFirstName(dto.getFirstName());
         if (dto.getLastName() != null) user.setLastName(dto.getLastName());
+        if (dto.getEmail() != null) {
+            String normalizedEmail = dto.getEmail().trim().toLowerCase();
+            if (!normalizedEmail.equalsIgnoreCase(user.getEmail())
+                    && userRepository.existsByEmailIgnoreCase(normalizedEmail)) {
+                throw new BadRequestException("Email already registered");
+            }
+            user.setEmail(normalizedEmail);
+        }
         if (dto.getPhone() != null) user.setPhone(dto.getPhone());
+        if (dto.getAddress() != null) user.setAddress(dto.getAddress());
+        if (dto.getProfession() != null) user.setProfession(dto.getProfession());
 
         userRepository.save(user);
         return mapToDto(user);
@@ -59,7 +69,7 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailIgnoreCase(email == null ? "" : email.trim())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
@@ -70,6 +80,8 @@ public class UserService {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .phone(user.getPhone())
+                .address(user.getAddress())
+                .profession(user.getProfession())
                 .kycStatus(user.getKycStatus())
                 .createdAt(user.getCreatedAt())
                 .build();

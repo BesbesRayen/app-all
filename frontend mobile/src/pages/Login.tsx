@@ -3,7 +3,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppNavigation } from "@/lib/app-navigation";
 import { login } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -118,7 +118,7 @@ const Login = () => {
             </View>
 
             <View style={styles.forgotRow}>
-              <TouchableOpacity activeOpacity={0.7}>
+              <TouchableOpacity activeOpacity={0.7} onPress={() => navigate("ForgotPassword")}>
                 <Text style={styles.forgotText}>Mot de passe oublie ?</Text>
               </TouchableOpacity>
             </View>
@@ -154,7 +154,7 @@ const Login = () => {
 
           <Text style={styles.footerText}>
             Pas encore de compte ?{" "}
-            <Text style={styles.footerAction} onPress={() => navigate("Home")}>
+            <Text style={styles.footerAction} onPress={() => navigate("Register")}>
               Creer un compte
             </Text>
           </Text>

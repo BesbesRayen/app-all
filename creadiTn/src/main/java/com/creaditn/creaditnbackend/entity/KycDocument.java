@@ -25,9 +25,6 @@ public class KycDocument {
     private String selfieUrl;
     private String cinNumber;
     private String ocrResult;
-    private String sumsubApplicantId;
-    private String sumsubReviewStatus;
-    private String sumsubReviewAnswer;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

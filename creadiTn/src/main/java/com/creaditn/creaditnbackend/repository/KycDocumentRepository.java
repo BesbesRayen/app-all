@@ -9,6 +9,5 @@ import java.util.Optional;
 public interface KycDocumentRepository extends JpaRepository<KycDocument, Long> {
     List<KycDocument> findByUserId(Long userId);
     Optional<KycDocument> findTopByUserIdOrderByCreatedAtDesc(Long userId);
-    Optional<KycDocument> findTopBySumsubApplicantIdOrderByCreatedAtDesc(String sumsubApplicantId);
     List<KycDocument> findByStatus(KycStatus status);
 }

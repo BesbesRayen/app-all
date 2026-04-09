@@ -1,10 +1,27 @@
-  import { createContext, ReactNode, useContext } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, ReactNode, useContext } from "react";
 
-export type AppRoute = "Login" | "Home" | "Shops" | "Credit" | "Installments" | "Profile" | "Kyc" | "NotFound";
+export type AppRoute =
+  | "Login"
+  | "ForgotPassword"
+  | "Register"
+  | "Home"
+  | "Shops"
+  | "ShopProducts"
+  | "ProductDetail"
+  | "Credit"
+  | "Installments"
+  | "Profile"
+  | "PersonalInformation"
+  | "EditProfileField"
+  | "Support"
+  | "Kyc"
+  | "NotFound";
 
 interface AppNavigationValue {
   route: AppRoute;
-  navigate: (route: AppRoute) => void;
+  params?: Record<string, unknown>;
+  navigate: (route: AppRoute, params?: Record<string, unknown>) => void;
 }
 
 const AppNavigationContext = createContext<AppNavigationValue | null>(null);

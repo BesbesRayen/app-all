@@ -13,6 +13,8 @@ public class UserDto {
     private String lastName;
     private String email;
     private String phone;
+    private String address;
+    private String profession;
 
     private KycStatus kycStatus;
     private LocalDateTime createdAt;

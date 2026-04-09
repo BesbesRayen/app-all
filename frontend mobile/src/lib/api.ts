@@ -1,5 +1,6 @@
 import { Platform } from "react-native";
 import Constants from "expo-constants";
+import shopCatalog from "@/data/shopCatalog.json";
 
 const getLanHostFromExpo = () => {
   const hostUri =
@@ -28,6 +29,16 @@ export const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? defaultBaseU
 export interface AuthRequest {
   email: string;
   password: string;
+}
+
+export interface RegisterRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phone?: string;
+  address?: string;
+  profession?: string;
 }
 
 export interface AuthResponse {
@@ -123,8 +134,16 @@ export interface UserProfile {
   lastName: string;
   email: string;
   phone: string;
+  address?: string;
+  profession?: string;
   kycStatus: string;
   createdAt: string;
+}
+
+export interface ApiResponse {
+  success: boolean;
+  message: string;
+  data?: unknown;
 }
 
 export interface KycStatusResult {
@@ -139,12 +158,57 @@ export interface KycStatusResult {
   createdAt: string;
 }
 
-export interface SumsubInitResult {
+export interface SupportTicket {
+  id: number;
   userId: number;
-  kycDocumentId: number;
-  applicantId: string;
-  sdkToken: string;
-  ttlInSecs: number;
+  subject: string;
+  message?: string;
+  response?: string;
+  status: string;
+  createdAt: string;
+}
+
+export interface SupportFaq {
+  id: number;
+  category: string;
+  question: string;
+  answer: string;
+}
+
+export interface UploadFileAsset {
+  uri: string;
+  fileName?: string;
+  mimeType?: string;
+}
+
+export interface ShopCatalogShop {
+  id: number;
+  name: string;
+  logoUrl: string;
+  storeUrl: string;
+}
+
+export interface ShopCatalogArticle {
+  id: number;
+  shopId: number;
+  name: string;
+  imageUrl: string;
+}
+
+export interface ShopCatalogProduct {
+  id: number;
+  shopId: number;
+  articleId: number;
+  name: string;
+  imageUrl: string;
+  priceTnd: number;
+  productUrl: string;
+}
+
+interface ShopCatalogPayload {
+  shops: ShopCatalogShop[];
+  articles: ShopCatalogArticle[];
+  products: ShopCatalogProduct[];
 }
 
 const getErrorMessage = async (response: Response) => {
@@ -220,7 +284,53 @@ export const login = async (payload: AuthRequest): Promise<AuthResponse> => {
   });
 };
 
+export const register = async (payload: RegisterRequest): Promise<AuthResponse> => {
+  return requestJson<AuthResponse>("/api/auth/register", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+};
+
 export const getMerchants = async () => requestJson<Merchant[]>("/api/merchants", { method: "GET" });
+
+const getShopCatalogPayload = async (): Promise<ShopCatalogPayload> => {
+  return shopCatalog as ShopCatalogPayload;
+};
+
+export const getShopCatalogShops = async () => {
+  const payload = await getShopCatalogPayload();
+  return payload.shops;
+};
+
+export const getShopCatalogShop = async (shopId: number) => {
+  const payload = await getShopCatalogPayload();
+  return payload.shops.find((shop) => shop.id === shopId) ?? null;
+};
+
+export const getShopCatalogProducts = async (shopId: number) => {
+  const payload = await getShopCatalogPayload();
+  return payload.products.filter((product) => product.shopId === shopId);
+};
+
+export const getShopCatalogProduct = async (shopId: number, productId: number) => {
+  const payload = await getShopCatalogPayload();
+  return payload.products.find((product) => product.shopId === shopId && product.id === productId) ?? null;
+};
+
+export const getShopCatalogArticles = async (shopId: number) => {
+  const payload = await getShopCatalogPayload();
+  return payload.articles.filter((article) => article.shopId === shopId);
+};
+
+export const getShopCatalogArticleProducts = async (shopId: number, articleId: number) => {
+  const payload = await getShopCatalogPayload();
+  return payload.products.filter((product) => product.shopId === shopId && product.articleId === articleId);
+};
+
+export const getShopCatalogArticle = async (shopId: number, articleId: number) => {
+  const payload = await getShopCatalogPayload();
+  return payload.articles.find((article) => article.shopId === shopId && article.id === articleId) ?? null;
+};
 
 export const getMyCreditScore = async (userId: number) =>
   requestJson<CreditScore>("/api/score/my", { method: "GET" }, { userId });
@@ -267,6 +377,16 @@ export const payInstallment = async (userId: number, installmentId: number, amou
 export const getProfile = async (userId: number) =>
   requestJson<UserProfile>("/api/users/profile", { method: "GET" }, { userId });
 
+export const updateProfile = async (userId: number, payload: Partial<Pick<UserProfile, "firstName" | "lastName" | "email" | "phone" | "address" | "profession">>) =>
+  requestJson<UserProfile>(
+    "/api/users/me",
+    {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    },
+    { userId },
+  );
+
 export const getKycStatus = async (userId: number) => {
   try {
     return await requestJson<KycStatusResult>("/api/kyc/status", { method: "GET" }, { userId });
@@ -278,11 +398,80 @@ export const getKycStatus = async (userId: number) => {
   }
 };
 
-export const initSumsubKyc = async (userId: number) =>
-  requestJson<SumsubInitResult>("/api/kyc/sumsub/init", { method: "POST" }, { userId });
+export const uploadKycDocuments = async (
+  userId: number,
+  cinNumber: string,
+  cinFront: UploadFileAsset,
+  cinBack: UploadFileAsset | null,
+  selfie: UploadFileAsset | null,
+) => {
+  const formData = new FormData();
+  formData.append("userId", String(userId));
+  formData.append("cinNumber", cinNumber);
+  formData.append("cinFront", {
+    uri: cinFront.uri,
+    name: cinFront.fileName ?? "cin-front.jpg",
+    type: cinFront.mimeType ?? "image/jpeg",
+  } as unknown as Blob);
 
-export const syncSumsubKycStatus = async (userId: number) =>
-  requestJson<KycStatusResult>("/api/kyc/sumsub/sync", { method: "POST" }, { userId });
+  formData.append("cinBack", {
+    uri: (cinBack ?? cinFront).uri,
+    name: (cinBack?.fileName ?? "cin-back.jpg"),
+    type: (cinBack?.mimeType ?? "image/jpeg"),
+  } as unknown as Blob);
+
+  if (selfie) {
+    formData.append("selfie", {
+      uri: selfie.uri,
+      name: selfie.fileName ?? "selfie.jpg",
+      type: selfie.mimeType ?? "image/jpeg",
+    } as unknown as Blob);
+  }
+
+  const response = await fetch(`${API_BASE_URL}/api/kyc/upload-multipart`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(await getErrorMessage(response));
+  }
+
+  return response.json() as Promise<KycStatusResult>;
+};
+
+export const getSupportFaq = async () => requestJson<SupportFaq[]>("/api/support/faq", { method: "GET" });
+
+export const getSupportTickets = async (userId: number) =>
+  requestJson<SupportTicket[]>("/api/support/tickets", { method: "GET" }, { userId });
+
+export const createSupportTicket = async (userId: number, payload: { subject: string; message: string }) =>
+  requestJson<SupportTicket>(
+    "/api/support/tickets",
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+    { userId },
+  );
+
+export const requestForgotPassword = async (identifier: string) =>
+  requestJson<ApiResponse>(
+    "/api/auth/forgot-password/request",
+    {
+      method: "POST",
+      body: JSON.stringify({ identifier }),
+    },
+  );
+
+export const confirmForgotPassword = async (identifier: string, code: string, newPassword: string) =>
+  requestJson<ApiResponse>(
+    "/api/auth/forgot-password/confirm",
+    {
+      method: "POST",
+      body: JSON.stringify({ identifier, code, newPassword }),
+    },
+  );
 
 export const getUnreadNotificationCount = async (userId: number) =>
   requestJson<number>("/api/notifications/unread-count", { method: "GET" }, { userId });

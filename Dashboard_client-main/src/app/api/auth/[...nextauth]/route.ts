@@ -2,18 +2,24 @@ import NextAuth, { type NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import pool from '@/lib/db.js';
 
+const googleClientId = process.env.GOOGLE_CLIENT_ID;
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+const hasGoogleOAuth = Boolean(googleClientId && googleClientSecret);
+
 const authOptions: NextAuthOptions = {
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-      authorization: {
-        params: {
-          prompt: 'select_account',
-        },
-      },
-    }),
-  ],
+  providers: hasGoogleOAuth
+    ? [
+        GoogleProvider({
+          clientId: googleClientId!,
+          clientSecret: googleClientSecret!,
+          authorization: {
+            params: {
+              prompt: 'select_account',
+            },
+          },
+        }),
+      ]
+    : [],
   pages: {
     signIn: '/login',
     error: '/login',
@@ -85,7 +91,7 @@ const authOptions: NextAuthOptions = {
     strategy: 'jwt' as const,
     maxAge: 7 * 24 * 60 * 60,
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || 'dev-only-secret-change-me',
   debug: true,
 };
 

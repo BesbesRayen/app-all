@@ -7,11 +7,10 @@ import { getKycStatus, getProfile, KycStatusResult, UserProfile } from "@/lib/ap
 import { useAuth } from "@/lib/auth";
 
 const menuItems = [
-  { label: "Informations personnelles" },
-  { label: "Verification KYC", badge: "En attente" },
-  { label: "Score de credit" },
-  { label: "Mes demandes" },
-  { label: "Aide & Support" },
+  { label: "Informations personnelles", action: "info" as const },
+  { label: "Score de credit", action: "score" as const },
+  { label: "Mes demandes", action: "requests" as const },
+  { label: "Aide & Support", action: "support" as const },
 ];
 
 const Profile = () => {
@@ -68,6 +67,23 @@ const Profile = () => {
   const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
   const kycLabel = kyc?.status ?? profile?.kycStatus ?? "PENDING";
 
+  const handleMenuAction = (action: "info" | "score" | "requests" | "support") => {
+    switch (action) {
+      case "info":
+        navigate("PersonalInformation");
+        return;
+      case "score":
+        navigate("Credit");
+        return;
+      case "requests":
+        navigate("Installments");
+        return;
+      case "support":
+        navigate("Support");
+        return;
+    }
+  };
+
   return (
     <MobileLayout noPadding>
       <ScrollView contentContainerStyle={styles.content}>
@@ -85,19 +101,23 @@ const Profile = () => {
         </View>
 
         <View style={styles.kycCard}>
-          <Text style={styles.kycTitle}>Verification KYC</Text>
+          <Text style={styles.kycTitle}>Verification KYC personnalisée</Text>
           <Text style={styles.kycSub}>{`Statut actuel: ${kycLabel}`}</Text>
           <Pressable style={styles.primaryButton} onPress={() => navigate("Kyc")}>
-            <Text style={styles.primaryButtonText}>Completer</Text>
+            <Text style={styles.primaryButtonText}>Demarrer verification</Text>
           </Pressable>
         </View>
 
         <View style={styles.menuCard}>
           {menuItems.map((menuItem) => (
-            <View key={menuItem.label} style={styles.menuRow}>
+            <Pressable
+              key={menuItem.label}
+              style={styles.menuRow}
+              onPress={() => handleMenuAction(menuItem.action)}
+            >
               <Text style={styles.menuText}>{menuItem.label}</Text>
               {menuItem.badge && <Text style={styles.badge}>{menuItem.badge}</Text>}
-            </View>
+            </Pressable>
           ))}
         </View>
 

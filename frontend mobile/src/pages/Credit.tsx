@@ -14,7 +14,7 @@ import { useAppNavigation } from "@/lib/app-navigation";
 
 const Credit = () => {
   const { user } = useAuth();
-  const { navigate } = useAppNavigation();
+  const { navigate, params } = useAppNavigation();
   const [amount, setAmount] = useState(500);
   const [months, setMonths] = useState(3);
   const [confirmed, setConfirmed] = useState(false);
@@ -23,6 +23,10 @@ const Credit = () => {
   const [merchants, setMerchants] = useState<Merchant[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const selectedMerchantId = Number(params?.merchantId ?? 0);
+  const prefillAmount = Number(params?.prefillAmount ?? 0);
+  const selectedProductName = String(params?.productName ?? "");
 
   const downPayment = useMemo(() => Number((amount * 0.1).toFixed(3)), [amount]);
   const monthlyPayment = (simulation?.monthlyAmount ?? amount / months).toFixed(3);
@@ -41,6 +45,12 @@ const Credit = () => {
 
     loadMerchants();
   }, []);
+
+  useEffect(() => {
+    if (prefillAmount > 0) {
+      setAmount(Number(prefillAmount.toFixed(3)));
+    }
+  }, [prefillAmount]);
 
   useEffect(() => {
     const loadSimulation = async () => {
@@ -72,7 +82,7 @@ const Credit = () => {
         totalAmount: amount,
         downPayment,
         numberOfInstallments: months,
-        merchantId: merchants[0]?.id,
+        merchantId: selectedMerchantId || merchants[0]?.id,
       });
       setRequestId(result.id);
       setConfirmed(true);
@@ -124,6 +134,14 @@ const Credit = () => {
         <Text style={styles.title}>Demande de Credit</Text>
         <Text style={styles.subtitle}>Simulez votre plan de paiement</Text>
 
+        {!!selectedProductName && (
+          <View style={styles.prefillCard}>
+            <Text style={styles.prefillTitle}>Achat Creadi</Text>
+            <Text style={styles.prefillText}>{selectedProductName}</Text>
+            <Text style={styles.prefillHint}>Montant pre-rempli depuis le produit selectionne.</Text>
+          </View>
+        )}
+
         <View style={styles.card}>
           <Text style={styles.cardLabel}>Montant</Text>
           <Text style={styles.amount}>{amount.toFixed(3)} TND</Text>
@@ -162,7 +180,7 @@ const Credit = () => {
         {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
 
         <Pressable onPress={handleConfirmRequest} style={[styles.primaryButton, loading && styles.primaryButtonDisabled]} disabled={loading}>
-          <Text style={styles.primaryButtonText}>{loading ? "Envoi en cours..." : "Confirmer la demande"}</Text>
+          <Text style={styles.primaryButtonText}>{loading ? "Envoi en cours..." : "Buy with Creadi"}</Text>
         </Pressable>
       </ScrollView>
       <BottomNav />
@@ -192,6 +210,10 @@ const styles = StyleSheet.create({
   summaryRow: { flexDirection: "row", justifyContent: "space-between" },
   summaryKey: { color: "#9ca3af", fontSize: 13 },
   summaryValue: { color: "#fff", fontSize: 13, fontWeight: "700" },
+  prefillCard: { borderWidth: 1, borderColor: "#c7d2fe", backgroundColor: "#eef2ff", borderRadius: 12, padding: 12, gap: 4 },
+  prefillTitle: { fontSize: 11, color: "#4338ca", fontWeight: "800", textTransform: "uppercase" },
+  prefillText: { fontSize: 14, color: "#1e1b4b", fontWeight: "700" },
+  prefillHint: { fontSize: 12, color: "#4f46e5" },
   primaryButton: { marginTop: 4, backgroundColor: "#2563eb", borderRadius: 12, paddingVertical: 15, alignItems: "center" },
   primaryButtonDisabled: { opacity: 0.7 },
   primaryButtonText: { color: "#fff", fontWeight: "700", fontSize: 14 },

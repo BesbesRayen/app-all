@@ -40,6 +40,8 @@ public class SupportService {
                 .id(id)
                 .userId(userId)
                 .subject(req.getSubject())
+            .message(req.getMessage())
+            .response("Nous avons bien recu votre demande. Un agent vous repondra rapidement.")
                 .status("OPEN")
                 .createdAt(LocalDateTime.now())
                 .build();
